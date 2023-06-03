@@ -5,8 +5,11 @@ import {
   type DefaultSession,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -49,6 +52,56 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid Input");
+        }
+
+        // use zod to validate credentials
+        const { email, password } = credentials;
+        const schema = z.object({
+          email: z.string().min(3).max(20),
+          password: z.string().min(8).max(100),
+        });
+
+        try {
+          schema.parse({ email, password });
+        } catch (error) {
+          throw new Error("Invalid Input");
+        }
+        // Add logic here to look up the user from the credentials supplied
+        const user = await prisma.user.findFirst({
+          where: {
+            email: credentials.email,
+          },
+        });
+        if (user && user.password) {
+          // validate password
+          const isValid = bcrypt.compareSync(
+            credentials.password,
+            user.password
+          );
+          if (!isValid) {
+            throw new Error("Password is incorrect");
+          }
+
+          return user;
+        } else {
+          throw new Error("User not found");
+        }
+      },
     }),
     /**
      * ...add more providers here.

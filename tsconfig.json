@@ -22,6 +22,10 @@
     },
     "plugins": [{ "name": "next" }]
   },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
   "include": [
     ".eslintrc.cjs",
     "next-env.d.ts",

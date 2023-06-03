@@ -20,14 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={twMerge(
-          "bg-background font-sans text-foreground",
-          inter.variable,
-        )}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
