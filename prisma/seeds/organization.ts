@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { fakerID_ID as faker } from "@faker-js/faker";
 
-const organizationData = [
+export const organizationData = [
   {
     name: "BEM UNS",
     description:
@@ -211,187 +210,248 @@ const organizationData = [
   },
 ];
 
-const userData = [
+export const organizationUserData = [
   {
     name: "BEM UNS",
     email: "bemuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "081234567890",
-    address: "Alamat BEM UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "DEMA UNS",
     email: "demauns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "082345678901",
-    address: "Alamat DEMA UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "BKKT UNS",
     email: "bkktuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "083456789012",
-    address: "Alamat BKKT UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "VOCA ERUDITA UNS",
     email: "vocaeruditauns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "084567890123",
-    address: "Alamat VOCA ERUDITA UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "MARCHING BAND UNS",
     email: "marchingbanduns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "085678901234",
-    address: "Alamat MARCHING BAND UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "KOPMA UNS",
     email: "kopmauns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "086789012345",
-    address: "Alamat KOPMA UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "PRAMUKA UNS",
     email: "pramukauns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "087890123456",
-    address: "Alamat PRAMUKA UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "KSR PMI UNS",
     email: "ksrpmiuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "088901234567",
-    address: "Alamat KSR PMI UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "JN UKMI UNS",
     email: "jnukmiuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "089012345678",
-    address: "Alamat JN UKMI UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "PMK UNS",
     email: "pmkuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "090123456789",
-    address: "Alamat PMK UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "KMK UNS",
     email: "kmkuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "091234567890",
-    address: "Alamat KMK UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "LPM KENTINGAN UNS",
     email: "lpmkentinganuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "092345678901",
-    address: "Alamat LPM KENTINGAN UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "SIM UNS",
     email: "simuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "093456789012",
-    address: "Alamat SIM UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "KMS UNS",
     email: "kmsuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "094567890123",
-    address: "Alamat KMS UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "GWB UNS",
     email: "gwbuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "095678901234",
-    address: "Alamat GWB UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "TAEKWONDO UNS",
     email: "taekwondouns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "096789012345",
-    address: "Alamat TAEKWONDO UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "TAPAK SUCI UNS",
     email: "tapaksuciuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "097890123456",
-    address: "Alamat TAPAK SUCI UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "PERISAI DIRI UNS",
     email: "perisaidiriuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "098901234567",
-    address: "Alamat PERISAI DIRI UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "MP UNS",
     email: "mpuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "099012345678",
-    address: "Alamat MP UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "PSHT UNS",
     email: "pshtuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "010123456789",
-    address: "Alamat PSHT UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
   {
     name: "INKAI UNS",
     email: "inkaiuns@gmail.com",
     password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe",
-    phoneNumber: "011234567890",
-    address: "Alamat INKAI UNS",
+    phoneNumber: faker.phone.number(),
+    address: faker.location.streetAddress(),
   },
 ];
 
-async function main() {
-  // drop all data
-  await prisma.user.deleteMany();
-  await prisma.organization.deleteMany();
+const positions = [
+  "Ketua",
+  "Wakil Ketua",
+  "Sekretaris",
+  "Bendahara",
+  "Koordinator",
+  "Anggota",
+];
 
-  await prisma.organization.createMany({
-    data: organizationData,
+export const createOrganizationMember = (organizationId: string) => {
+  const numberOfSekeretaris = faker.number.int({ min: 1, max: 2 });
+  const numberOfBendahara = faker.number.int({ min: 1, max: 2 });
+  const numberOfKoordinator = faker.number.int({ min: 1, max: 4 });
+  const numberOfAnggota = faker.number.int({
+    min: numberOfKoordinator * 2,
+    max: numberOfKoordinator * 4,
   });
 
-  const organizationId = await prisma.organization.findMany({
-    select: {
-      id: true,
-    },
+  const memberData = positions.map((position) => {
+    const members = [];
+
+    const createMember = (position: string) => ({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      position,
+      studentId: faker.helpers
+        .fromRegExp(/[A-Z]{1}0[1-9][1-2][0-9]{1}[0-3][0-9]{2}/)
+        .toUpperCase(),
+      organizationId,
+    });
+
+    switch (position) {
+      case "Sekretaris":
+        members.push(
+          ...Array.from({ length: numberOfSekeretaris }).map(() =>
+            createMember(position)
+          )
+        );
+        break;
+      case "Bendahara":
+        members.push(
+          ...Array.from({ length: numberOfBendahara }).map(() =>
+            createMember(position)
+          )
+        );
+        break;
+      case "Koordinator":
+        members.push(
+          ...Array.from({ length: numberOfKoordinator }).map(() =>
+            createMember(position)
+          )
+        );
+        break;
+      case "Anggota":
+        members.push(
+          ...Array.from({ length: numberOfAnggota }).map(() =>
+            createMember(position)
+          )
+        );
+        break;
+      default:
+        members.push(
+          ...Array.from({ length: numberOfSekeretaris }).map(() =>
+            createMember(position)
+          )
+        );
+        break;
+    }
+
+    return members;
   });
 
-  await prisma.user.createMany({
-    data: userData.map((user, index) => {
-      return {
-        ...user,
-        organizationId: organizationId[index]?.id,
-      };
-    }),
-  });
-}
+  return memberData.flat();
+};
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+export const createOrganizationAchievement = (organizationId: string) => {
+  const numberOfAchievements = faker.number.int({ min: 1, max: 5 });
+
+  return Array.from({ length: numberOfAchievements }).map(() => ({
+    title: faker.lorem.sentence(),
+    date: faker.date.past(),
+    organizationId,
+  }));
+};
+
+export const createOrganizationWorkProgram = (organizationId: string) => {
+  const numberOfWorkPrograms = faker.number.int({ min: 1, max: 5 });
+  const status = ["Belum Terlaksana", "Terlaksana", "Tertunda"];
+  return Array.from({ length: numberOfWorkPrograms }).map(() => ({
+    title: faker.lorem.sentence(),
+    date: faker.date.past(),
+    status: status[faker.number.int({ min: 0, max: 2 })] ?? "Belum Terlaksana",
+    organizationId,
+  }));
+};

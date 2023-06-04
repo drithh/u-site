@@ -58,8 +58,8 @@ model User {
 
 model Review {
   id          String   @id @default(cuid())
-  text        String
   rating      Int
+  comment     String
 
   organization Organization @relation(fields: [organizationId], references: [id])
   organizationId String
@@ -82,12 +82,22 @@ model Organization {
   user          User?
   reviews       Review[]
   members       Member[]
-  workPlans     WorkPlan[]
-
+  workPrograms     WorkProgram[]
+  achievements  Achievement[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+}
+
+model Achievement {
+    id              String @id @default(cuid())
+
+    organization    Organization @relation(fields: [organizationId], references: [id])
+    organizationId  String
+
+    title           String
+    date            DateTime
 }
 
 model Member {
@@ -102,15 +112,14 @@ model Member {
     position        String
 }
 
-model WorkPlan {
+model WorkProgram {
     id              String @id @default(cuid())
 
     organization    Organization @relation(fields: [organizationId], references: [id])
     organizationId  String
 
     title           String
-    startDate       DateTime
-    endDate         DateTime
+    date            DateTime
     status          String
 }   
 
