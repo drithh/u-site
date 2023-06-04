@@ -1,8 +1,15 @@
 import "~/styles/globals.css";
-import { Inter } from "next/font/google";
+import { Playfair_Display, Lato } from "next/font/google";
 import { twMerge } from "tailwind-merge";
 
-const inter = Inter({
+const playfair = Playfair_Display({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
+
+const lato = Lato({
+  weight: ["300", "400", "700", "900"],
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -20,7 +27,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body
+        className={twMerge(
+          "mx-auto min-h-screen max-w-5xl border-x-2 border-solid border-stone-200 px-8",
+          lato.variable,
+          playfair.variable
+        )}
+      >
+        {children}
+      </body>
     </html>
   );
 }
