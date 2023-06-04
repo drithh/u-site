@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  previewFeatures = ["jsonProtocol", "fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
@@ -78,7 +78,7 @@ model Review {
 
 model Organization {
   id            String @id @default(cuid())
-  name          String
+  name          String 
   description   String  @db.VarChar(1000)
   field         String
   established   DateTime?
@@ -95,6 +95,7 @@ model Organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+   @@fulltext([name])
 }
 
 model Achievement {

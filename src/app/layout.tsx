@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import { Playfair_Display, Lato } from "next/font/google";
 import { twMerge } from "tailwind-merge";
+import Providers from "~/lib/providers";
 
 const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
@@ -26,16 +27,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={twMerge(
-          "mx-auto min-h-screen max-w-5xl border-x-2 border-solid border-stone-200 px-8",
-          lato.variable,
-          playfair.variable
-        )}
-      >
-        {children}
-      </body>
-    </html>
+    <Providers>
+      <html lang="en">
+        <body
+          className={twMerge(
+            " flex min-h-screen place-content-center  ",
+            lato.variable,
+            playfair.variable
+          )}
+        >
+          {children}
+        </body>
+      </html>
+    </Providers>
   );
 }

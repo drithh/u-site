@@ -16,10 +16,12 @@ export const organizationRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const organizations = await ctx.prisma.organization.findMany({
-        where: {
-          name: input.name,
-          field: input.field,
-        },
+        // where: {
+        //   name: {
+        //     search: input.name,
+        //   },
+        //   field: input.field,
+        // },
       });
 
       return organizations;
