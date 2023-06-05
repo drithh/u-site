@@ -1,6 +1,13 @@
 import { api } from "~/trpc/server";
 import Image from "next/image";
-import { Member, WorkProgram, Achievement } from "@prisma/client";
+import type {
+  Member,
+  WorkProgram,
+  Achievement,
+  Review,
+  User,
+} from "@prisma/client";
+import { Star } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -9,6 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from "~/ui/table";
+
+// init dayjs
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { twMerge } from "tailwind-merge";
+dayjs.extend(relativeTime);
 
 export default async function Page({
   params,
@@ -37,15 +50,16 @@ export default async function Page({
         </span>
       </header>
       <main className="mt-8 flex flex-col gap-8">
-        <Achievement achievements={organization.achievements} />
-        <Member members={organization.members} />
-        <WorkProgram workPrograms={organization.workPrograms} />
+        <Achievements achievements={organization.achievements} />
+        <Members members={organization.members} />
+        <WorkPrograms workPrograms={organization.workPrograms} />
+        <Reviews reviews={organization.reviews} />
       </main>
     </>
   );
 }
 
-function Achievement({ achievements }: { achievements: Achievement[] }) {
+function Achievements({ achievements }: { achievements: Achievement[] }) {
   return (
     <div className="achievement border-2 border-solid border-stone-200 p-8">
       <h2 className="mb-12 text-center text-5xl font-bold uppercase">
@@ -74,7 +88,7 @@ function Achievement({ achievements }: { achievements: Achievement[] }) {
   );
 }
 
-function Member({ members }: { members: Member[] }) {
+function Members({ members }: { members: Member[] }) {
   return (
     <div className="member border-2 border-solid border-stone-200 p-8">
       <h2 className="mb-12 text-center text-5xl font-bold uppercase">
@@ -97,7 +111,7 @@ function Member({ members }: { members: Member[] }) {
   );
 }
 
-function WorkProgram({ workPrograms }: { workPrograms: WorkProgram[] }) {
+function WorkPrograms({ workPrograms }: { workPrograms: WorkProgram[] }) {
   return (
     <div className="work-program border-2 border-solid border-stone-200 p-8">
       <h2 className="mb-12 text-center text-5xl font-bold uppercase">
@@ -138,6 +152,47 @@ function WorkProgram({ workPrograms }: { workPrograms: WorkProgram[] }) {
             ))}
           </TableBody>
         </Table>
+      </div>
+    </div>
+  );
+}
+
+function Reviews({
+  reviews,
+}: {
+  reviews: (Review & {
+    createdBy: User;
+  })[];
+}) {
+  return (
+    <div className="review border-2 border-solid border-stone-200 p-8">
+      <h2 className="mb-12 text-center text-5xl font-bold uppercase">Review</h2>
+      <div className="my-6 flex flex-col gap-8 font-sans ">
+        {reviews.map((review) => (
+          <div
+            key={review.id}
+            className="flex flex-col gap-4  border-y-2 border-solid border-stone-200  p-4"
+          >
+            <div className="flex place-content-between place-items-center">
+              <div className="flex">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <Star
+                    key={index}
+                    className={twMerge(
+                      "h-6 w-6 text-stone-500",
+                      review.rating > index && "fill-stone-500"
+                    )}
+                  />
+                ))}
+              </div>
+              <p className="opacity-60">{dayjs(review.createdAt).fromNow()}</p>
+            </div>
+            <h3 className="text-justify text-xl font-bold">
+              {review.createdBy.name}
+            </h3>
+            <p className="text-justify text-lg">{review.comment}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

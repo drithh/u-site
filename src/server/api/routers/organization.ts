@@ -53,11 +53,21 @@ export const organizationRouter = createTRPCRouter({
         },
       });
 
+      const reviews = await ctx.prisma.review.findMany({
+        where: {
+          organizationId: input.id,
+        },
+        include: {
+          createdBy: true,
+        },
+      });
+
       return {
         detail: organization,
         achievements,
         members,
         workPrograms,
+        reviews,
       };
     }),
   createOrganization: protectedProcedure
