@@ -54,7 +54,7 @@ export const organizationRouter = createTRPCRouter({
       });
 
       return {
-        details: organization,
+        detail: organization,
         achievements,
         members,
         workPrograms,
