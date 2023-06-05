@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "~/ui/select";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Search } from "lucide-react";
+import { Search, ArrowUpRight } from "lucide-react";
 
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
@@ -190,10 +190,11 @@ function Organization({ organization }: { organization: OrganizationType }) {
           </div>
           <div className="flex place-content-end">
             <Link
-              href={`/organization/${organization.id}`}
-              className="text-lg font-bold  text-stone-500 hover:underline"
+              href={`/${organization.id}`}
+              className="group flex place-items-center  gap-1 text-lg font-bold text-stone-500 transition-colors duration-300 hover:text-stone-700"
             >
-              Selengkapnya
+              Detail
+              <ArrowUpRight className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>

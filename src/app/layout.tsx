@@ -36,7 +36,12 @@ export default function RootLayout({
             playfair.variable
           )}
         >
-          {children}
+          <div className="w-full max-w-5xl">
+            {children}
+            <footer className="mt-8 border-2 border-solid border-stone-200 px-8 py-4 font-sans">
+              s
+            </footer>
+          </div>
         </body>
       </html>
     </Providers>

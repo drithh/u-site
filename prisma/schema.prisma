@@ -77,11 +77,11 @@ model Review {
 }
 
 model Organization {
-  id            String @id @default(cuid())
+id            String @id @default(cuid())
   name          String 
   description   String  @db.VarChar(1000)
   field         String
-  established   DateTime?
+  establishedAt   DateTime?
   image         String?
   vision        String?
   mission       String?
