@@ -1,5 +1,5 @@
 "use client";
-
+import { SessionProvider } from "next-auth/react";
 import React from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
@@ -8,7 +8,11 @@ function Providers({ children }: React.PropsWithChildren) {
     new QueryClient({ defaultOptions: { queries: { staleTime: 5000 } } })
   );
 
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={client}>
+      <SessionProvider>{children}</SessionProvider>
+    </QueryClientProvider>
+  );
 }
 
 export default Providers;

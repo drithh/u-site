@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInForm } from "~/app/sign-in/page";
+import SignInForm from "~/component/sign-in-form";
 import {
   DialogContent,
   DialogHeader,
@@ -27,7 +27,7 @@ export default function SignInModal() {
           Sign in to your account to continue
         </DialogDescription>
       </DialogHeader>
-      <SignInForm />
+      <SignInForm successCallback={() => router.back()} />
     </DialogContent>
   );
 }

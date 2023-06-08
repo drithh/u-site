@@ -5,7 +5,7 @@ import Providers from "~/lib/providers";
 import Image from "next/image";
 import Link from "next/link";
 import { Copyright } from "lucide-react";
-import { Dialog, DialogTrigger } from "~/ui/dialog";
+import { Toaster } from "~/ui/toaster";
 import Navigation from "~/component/navigation";
 
 const playfair = Playfair_Display({
@@ -75,6 +75,7 @@ export default function RootLayout({
                 <div className="h-0.5 w-4/5 bg-stone-200"></div>
               </div>
             </footer>
+            <Toaster />
           </div>
         </body>
       </html>

@@ -5,7 +5,7 @@ const numberOfUsers = 20;
 export const reviewUserData = Array.from({ length: numberOfUsers }).map(() => ({
   name: faker.person.fullName(),
   email: faker.internet.email(),
-  password: "$2a$10$GVy2tzzM4bPy4SMQ6hDqDexMjNjwT/kynr0becK4qyQf6tysGzlJe", // "password
+  password: "$2a$10$ljjcc.s0It0TusIJIWahgOsVhHA0gqjmRMo17DHJptv9pFXHKnjTa", // "password
   phoneNumber: faker.phone.number(),
   address: faker.location.streetAddress(),
 }));
