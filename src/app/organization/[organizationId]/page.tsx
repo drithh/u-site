@@ -157,6 +157,8 @@ function WorkPrograms({ workPrograms }: { workPrograms: WorkProgram[] }) {
   );
 }
 
+import { Avatar, AvatarFallback } from "~/ui/avatar";
+
 function Reviews({
   reviews,
 }: {
@@ -173,23 +175,35 @@ function Reviews({
             key={review.id}
             className="flex flex-col gap-4  border-y-2 border-solid border-stone-200  p-4"
           >
-            <div className="flex place-content-between place-items-center">
-              <div className="flex">
-                {Array.from({ length: 5 }, (_, index) => (
-                  <Star
-                    key={index}
-                    className={twMerge(
-                      "h-6 w-6 text-stone-500",
-                      review.rating > index && "fill-stone-500"
-                    )}
-                  />
-                ))}
+            <div className="flex gap-4">
+              <Avatar className="h-14 w-14">
+                <AvatarFallback>
+                  {review.createdBy.name?.slice(0, 2).toUpperCase() ?? "AA"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex w-full place-content-between place-items-center">
+                <div className="flex flex-col place-content-between gap-1">
+                  <h3 className="text-justify text-xl font-bold">
+                    {review.createdBy.name}
+                  </h3>
+                  <div className="flex">
+                    {Array.from({ length: 5 }, (_, index) => (
+                      <Star
+                        key={index}
+                        className={twMerge(
+                          "h-6 w-6 text-stone-500",
+                          review.rating > index && "fill-stone-500"
+                        )}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
-              <p className="opacity-60">{dayjs(review.createdAt).fromNow()}</p>
+              <p className="w-32 text-right opacity-60">
+                {dayjs(review.createdAt).fromNow()}
+              </p>
             </div>
-            <h3 className="text-justify text-xl font-bold">
-              {review.createdBy.name}
-            </h3>
+
             <p className="text-justify text-lg">{review.comment}</p>
           </div>
         ))}
