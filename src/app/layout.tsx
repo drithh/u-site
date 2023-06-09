@@ -28,7 +28,7 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default async function RootLayout({
+export default  function RootLayout({
   children,
   signInModal,
   signUpModal,
@@ -37,10 +37,10 @@ export default async function RootLayout({
   signInModal: React.ReactNode;
   signUpModal: React.ReactNode;
 }) {
-  const cookie = headers().get("cookie") ?? "";
-  const session = (await getSession(cookie)) ?? undefined;
+  // const cookie = headers().get("cookie") ?? "";
+  // const session = (await getSession(cookie)) ?? undefined;
   return (
-    <Providers session={session}>
+    <Providers >
       <html lang="en">
         <body
           className={twMerge(
