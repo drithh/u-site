@@ -190,7 +190,7 @@ function Organization({ organization }: { organization: OrganizationType }) {
           </div>
           <div className="flex place-content-end">
             <Link
-              href={`/organization/${organization.id}`}
+              href={`/organizations/${organization.id}`}
               className="group flex place-items-center  gap-1 text-lg font-bold text-stone-500 transition-colors duration-300 hover:text-stone-700"
             >
               Detail

@@ -12,11 +12,11 @@ interface AuthProps {
 export default function Auth({ signInModal, signUpModal }: AuthProps) {
   const session = useSession();
   const name = session.data?.user?.name ?? "AA";
-  console.log(session);
+  const organizationId = session.data?.user.organizationId;
   return (
     <div className="flex flex-row gap-4 font-sans">
       {session.status === "authenticated" ? (
-        <Profile name={name} />
+        <Profile name={name} organizationId={organizationId} />
       ) : (
         <>
           <Link href="/sign-in">
@@ -58,9 +58,10 @@ import {
 
 interface ProfileProps {
   name: string;
+  organizationId?: string | null;
 }
 
-export function Profile({ name }: ProfileProps) {
+export function Profile({ name, organizationId }: ProfileProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -71,12 +72,17 @@ export function Profile({ name }: ProfileProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 font-sans">
-        <Link href="/organization" className="hover:cursor-pointer">
-          <DropdownMenuItem>
-            <Users className="mr-2 h-4 w-4" />
-            <span>UKM</span>
-          </DropdownMenuItem>
-        </Link>
+        {organizationId && (
+          <Link
+            href={`/organizations/${organizationId}/edit`}
+            className="w-full"
+          >
+            <DropdownMenuItem>
+              <Users className="mr-2 h-4 w-4" />
+              <span>UKM</span>
+            </DropdownMenuItem>
+          </Link>
+        )}
         <DropdownMenuSeparator />
         <button
           onClick={() =>

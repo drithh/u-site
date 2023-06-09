@@ -7,6 +7,8 @@ import Link from "next/link";
 import { Copyright } from "lucide-react";
 import { Toaster } from "~/ui/toaster";
 import Navigation from "~/component/navigation";
+import { headers } from "next/headers";
+import { getSession } from "~/lib/session";
 
 const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
@@ -26,7 +28,7 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   signInModal,
   signUpModal,
@@ -35,8 +37,11 @@ export default function RootLayout({
   signInModal: React.ReactNode;
   signUpModal: React.ReactNode;
 }) {
+  const cookie = headers().get("cookie") ?? "";
+  const session = (await getSession(cookie)) ?? undefined;
+  console.log("asdasdsadasdsad", session);
   return (
-    <Providers>
+    <Providers session={session}>
       <html lang="en">
         <body
           className={twMerge(

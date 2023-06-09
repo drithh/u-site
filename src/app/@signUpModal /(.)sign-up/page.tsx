@@ -1,6 +1,5 @@
 "use client";
 
-import { SignUpForm } from "~/app/sign-up/page";
 import {
   DialogContent,
   DialogHeader,
@@ -8,6 +7,7 @@ import {
   DialogDescription,
 } from "~/ui/dialog";
 import { useRouter } from "next/navigation";
+import SignUpForm from "~/component/sign-up-form";
 
 export default function SignUpModal() {
   const router = useRouter();

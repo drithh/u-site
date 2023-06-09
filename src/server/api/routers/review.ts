@@ -6,12 +6,12 @@ export const reviewRouter = createTRPCRouter({
     .input(
       z.object({
         organizationId: z.string(),
-        createdById: z.string(),
-        rating: z.number(),
+        createdById: z.string().min(1),
+        rating: z.number().min(1).max(5),
         comment: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const review = await ctx.prisma.review.create({
         data: {
           ...input,
@@ -22,7 +22,7 @@ export const reviewRouter = createTRPCRouter({
     }),
   deleteReview: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const review = await ctx.prisma.review.delete({
         where: {
           id: input.id,

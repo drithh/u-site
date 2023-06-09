@@ -1,5 +1,9 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { organizationRouter } from "~/server/api/routers/organization";
+import { memberRouter } from "~/server/api/routers/member";
+import { achievementRouter } from "~/server/api/routers/achievement";
+import { reviewRouter } from "~/server/api/routers/review";
+import { workProgramRouter } from "~/server/api/routers/work-program";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +12,10 @@ import { organizationRouter } from "~/server/api/routers/organization";
  */
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
+  member: memberRouter,
+  achievement: achievementRouter,
+  review: reviewRouter,
+  workProgram: workProgramRouter,
 });
 
 // export type definition of API

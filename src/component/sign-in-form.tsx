@@ -92,6 +92,7 @@ export default function SignInForm({
         <Button
           type="submit"
           className="w-full bg-stone-400 text-lg font-semibold text-white"
+          onClick={() => void signIn("google")}
         >
           Sign In with Google
         </Button>
