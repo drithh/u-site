@@ -39,7 +39,6 @@ export default async function RootLayout({
 }) {
   const cookie = headers().get("cookie") ?? "";
   const session = (await getSession(cookie)) ?? undefined;
-  console.log("asdasdsadasdsad", session);
   return (
     <Providers session={session}>
       <html lang="en">

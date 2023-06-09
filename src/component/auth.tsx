@@ -11,7 +11,6 @@ interface AuthProps {
 }
 export default function Auth({ signInModal, signUpModal }: AuthProps) {
   const session = useSession();
-  console.log(session);
   return (
     <div className="flex flex-row gap-4 font-sans">
       {session.status === "authenticated" ? (

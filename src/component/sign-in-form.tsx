@@ -28,14 +28,12 @@ export default function SignInForm({
     const password = passwordRef.current?.value;
 
     try {
-      console.log("submit");
       const data = await signIn("credentials", {
         email,
         password,
         callbackUrl: "/",
         redirect: false,
       });
-      console.log(data);
       if (data?.error) {
         toast({
           variant: "destructive",
