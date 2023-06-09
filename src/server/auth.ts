@@ -44,16 +44,18 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
+    redirect: async ({ url, baseUrl }) => {
+      return Promise.resolve(url.startsWith(baseUrl) ? url : baseUrl);
+    },
     jwt: ({ token }) => {
       return token;
     },
     session: async ({ session }) => {
       const userData = await prisma.user.findFirst({
         where: {
-          id: session?.user?.id,
+          email: session?.user?.email,
         },
       });
-
       return {
         ...session,
         user: {
@@ -65,7 +67,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/sign-in",
+    signIn: "",
   },
   adapter: PrismaAdapter(prisma),
   providers: [

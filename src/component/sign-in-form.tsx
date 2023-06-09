@@ -5,9 +5,8 @@ import { Label } from "~/ui/label";
 import { Button } from "~/ui/button";
 import { signIn } from "next-auth/react";
 import { useToast } from "~/ui/use-toast";
-
 import Link from "next/link";
-import { useCallback, useRef } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
 interface SignInFormProps {
@@ -92,7 +91,11 @@ export default function SignInForm({
         <Button
           type="submit"
           className="w-full bg-stone-400 text-lg font-semibold text-white"
-          onClick={() => void signIn("google")}
+          onClick={() => {
+            void signIn("google", {
+              callbackUrl: "/",
+            });
+          }}
         >
           Sign In with Google
         </Button>

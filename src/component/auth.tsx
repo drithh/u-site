@@ -11,12 +11,11 @@ interface AuthProps {
 }
 export default function Auth({ signInModal, signUpModal }: AuthProps) {
   const session = useSession();
-  const name = session.data?.user?.name ?? "AA";
-  const organizationId = session.data?.user.organizationId;
+  console.log(session);
   return (
     <div className="flex flex-row gap-4 font-sans">
       {session.status === "authenticated" ? (
-        <Profile name={name} organizationId={organizationId} />
+        <Profile data={session.data} />
       ) : (
         <>
           <Link href="/sign-in">
@@ -55,26 +54,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
+import { toast } from "~/ui/use-toast";
+import type { Session } from "next-auth";
 
 interface ProfileProps {
-  name: string;
-  organizationId?: string | null;
+  data: Session;
 }
 
-export function Profile({ name, organizationId }: ProfileProps) {
+export function Profile({ data }: ProfileProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={null}>
+        <Button variant={null} className="h-12 w-12 rounded-full">
           <Avatar className="h-12 w-12">
-            <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
+            {/* {data.user.image && (
+              <AvatarImage
+                src={data.user.image}
+                alt={data.user.name ?? "User Image"}
+              />
+            )} */}
+            <AvatarFallback>
+              {data.user.name?.slice(0, 2).toUpperCase() ?? "AA"}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 font-sans">
-        {organizationId && (
+        {data.user.organizationId?.length && (
           <Link
-            href={`/organizations/${organizationId}/edit`}
+            href={`/organizations/${data.user.organizationId}/edit`}
             className="w-full"
           >
             <DropdownMenuItem>
@@ -85,11 +93,14 @@ export function Profile({ name, organizationId }: ProfileProps) {
         )}
         <DropdownMenuSeparator />
         <button
-          onClick={() =>
+          onClick={() => {
+            toast({
+              title: "Logged out",
+            });
             void signOut({
               callbackUrl: "/",
-            })
-          }
+            });
+          }}
           className="w-full hover:cursor-pointer"
         >
           <DropdownMenuItem>

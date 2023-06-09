@@ -3,7 +3,6 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { env } from "~/env.mjs";
 import { z } from "zod";
 
 export const organizationRouter = createTRPCRouter({
@@ -14,7 +13,7 @@ export const organizationRouter = createTRPCRouter({
         field: z.string().optional(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .query(async ({ ctx }) => {
       const organizations = await ctx.prisma.organization.findMany({
         // where: {
         //   name: {
