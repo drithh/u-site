@@ -7,8 +7,6 @@ import Link from "next/link";
 import { Copyright } from "lucide-react";
 import { Toaster } from "~/ui/toaster";
 import Navigation from "~/component/navigation";
-import { headers } from "next/headers";
-import { getSession } from "~/lib/session";
 
 const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
@@ -37,8 +35,6 @@ export default  function RootLayout({
   signInModal: React.ReactNode;
   signUpModal: React.ReactNode;
 }) {
-  // const cookie = headers().get("cookie") ?? "";
-  // const session = (await getSession(cookie)) ?? undefined;
   return (
     <Providers >
       <html lang="en">

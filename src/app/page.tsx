@@ -1,4 +1,4 @@
-// import Organizations from "~/component/organization";
+import Organizations from "~/component/organization";
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
         </h3>
       </header>
       <main className="mt-8 border-2 border-solid border-stone-200 px-8 py-4 font-sans">
-        {/* <Organizations /> */}
+        <Organizations />
       </main>
     </>
   );
