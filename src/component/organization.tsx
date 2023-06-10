@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "~/trpc/client";
-import Image from "next/image";
+import CloudinaryImage from "~/component/image";
 import Link from "next/link";
 import type { Organization as OrganizationType } from "@prisma/client";
 import { Input } from "~/ui/input";
@@ -171,13 +171,7 @@ function Organization({ organization }: { organization: OrganizationType }) {
     >
       <div className="flex gap-4">
         <div className="h-48 w-48">
-          <Image
-            src={organization.image ?? "/image-not-available.webp"}
-            alt={organization.name}
-            width={192}
-            height={192}
-            className="h-full w-full rounded-xl bg-stone-600"
-          ></Image>
+          <CloudinaryImage imagePath={organization.image ?? undefined} />
         </div>
         <div className="flex h-48 flex-1 flex-col place-content-between gap-3">
           <div className="flex flex-col gap-3">

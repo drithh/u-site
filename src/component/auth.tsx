@@ -80,17 +80,19 @@ export function Profile({ data }: ProfileProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 font-sans">
         {data.user.organizationId?.length && (
-          <Link
-            href={`/organizations/${data.user.organizationId}/edit`}
-            className="w-full"
-          >
-            <DropdownMenuItem>
-              <Users className="mr-2 h-4 w-4" />
-              <span>UKM</span>
-            </DropdownMenuItem>
-          </Link>
+          <>
+            <Link
+              href={`/organizations/${data.user.organizationId}/edit`}
+              className="w-full"
+            >
+              <DropdownMenuItem>
+                <Users className="mr-2 h-4 w-4" />
+                <span>UKM</span>
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+          </>
         )}
-        <DropdownMenuSeparator />
         <button
           onClick={() => {
             toast({

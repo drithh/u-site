@@ -1,5 +1,5 @@
 import { api } from "~/trpc/server";
-import Image from "next/image";
+import CloudinaryImage from "~/component/image";
 import type { Member, WorkProgram, Achievement } from "@prisma/client";
 import {
   Table,
@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "~/ui/table";
 import Reviews from "./component/review";
-
+import dayjs from "dayjs";
 export default async function Page({
   params,
 }: {
@@ -22,20 +22,36 @@ export default async function Page({
 
   return (
     <>
-      <header className="mt-8 flex min-h-[28.5rem] flex-col place-items-center gap-4  border-2 border-solid border-stone-200 p-8 text-justify font-serif md:block">
-        <Image
-          src={organization.detail?.image ?? "/image-not-available.webp"}
-          alt={organization.detail?.name ?? "Organization Image"}
-          width={240}
-          height={240}
-          className="float-left  w-full max-w-sm rounded-xl bg-stone-600 md:mr-6"
-        ></Image>
-        <div className="-mt-4 mb-8 text-center text-[5rem] font-bold md:text-justify">
-          {organization.detail?.name}
+      <header className="mt-8 flex  flex-col place-items-center gap-4  border-2 border-solid border-stone-200 p-8 text-justify font-serif md:block">
+        <div>
+          <div className="w-full  max-w-sm rounded-xl bg-stone-600 md:float-left md:mr-6">
+            <CloudinaryImage
+              imagePath={organization.detail?.image ?? undefined}
+            />
+          </div>
+
+          <div className="-mt-4 mb-4 text-center text-[5rem] font-bold md:text-justify">
+            {organization.detail?.name}
+          </div>
+          <span className=" max-w-2xl text-3xl font-medium">
+            {organization.detail?.description}
+          </span>
         </div>
-        <span className=" max-w-2xl text-3xl font-medium">
-          {organization.detail?.description}
-        </span>
+        <div className="clear-left mb-5 w-full pt-5">
+          <span className="text-3xl font-semibold">Tanggal Berdiri:</span>
+          <span className="pl-2 text-3xl">
+            {dayjs(organization.detail?.establishedAt).format("DD MMMM YYYY") ??
+              "-"}
+          </span>
+        </div>
+        <div className="mb-5 w-full">
+          <div className="text-3xl font-semibold">Visi:</div>
+          <div className="pl-5 text-3xl">{organization.detail?.vision}</div>
+        </div>
+        <div className="w-full">
+          <div className="text-3xl font-semibold">Misi:</div>
+          <div className="pl-5 text-3xl">{organization.detail?.mission}</div>
+        </div>
       </header>
       <main className="mt-8 flex flex-col gap-8">
         <Achievements achievements={organization.achievements} />

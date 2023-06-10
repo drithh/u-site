@@ -109,7 +109,7 @@ export const organizationRouter = createTRPCRouter({
           .optional(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const organization = await ctx.prisma.organization.create({
         data: {
           ...input.organization,
@@ -150,19 +150,24 @@ export const organizationRouter = createTRPCRouter({
         id: z.string(),
         name: z.string().optional(),
         field: z.string().optional(),
+        image: z.object({}).optional(),
         description: z.string().optional(),
         vision: z.string().optional(),
         mission: z.string().optional(),
-        establishedAt: z.string().optional(),
+        establishedAt: z.date().optional(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
+      const { image, ...rest } = input;
+      if (image) {
+        console.log("image", image);
+      }
       const organization = await ctx.prisma.organization.update({
         where: {
           id: input.id,
         },
         data: {
-          ...input,
+          ...rest,
         },
       });
 

@@ -1,5 +1,4 @@
 import { api } from "~/trpc/server";
-import Image from "next/image";
 import type {
   Member,
   WorkProgram,
@@ -20,8 +19,8 @@ import {
 // init dayjs
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { twMerge } from "tailwind-merge";
 dayjs.extend(relativeTime);
+import { twMerge } from "tailwind-merge";
 
 export default async function Page({
   params,
@@ -34,22 +33,11 @@ export default async function Page({
 
   return (
     <>
-      <header className="mt-8 flex min-h-[28.5rem] flex-col place-items-center gap-4  border-2 border-solid border-stone-200 p-8 text-justify font-serif md:block">
-        <Image
-          src={organization.detail?.image ?? "/image-not-available.webp"}
-          alt={organization.detail?.name ?? "Organization Image"}
-          width={240}
-          height={240}
-          className="float-left  w-full max-w-sm rounded-xl bg-stone-600 md:mr-6"
-        ></Image>
-        <div className="-mt-4 mb-8 text-center text-[5rem] font-bold md:text-justify">
-          {organization.detail?.name}
-        </div>
-        <span className=" max-w-2xl text-3xl font-medium">
-          {organization.detail?.description}
-        </span>
-      </header>
       <main className="mt-8 flex flex-col gap-8">
+        <Information
+          organization={organization.detail}
+          id={params.organizationId}
+        />
         <Achievements achievements={organization.achievements} />
         <Members members={organization.members} />
         <WorkPrograms workPrograms={organization.workPrograms} />
@@ -158,6 +146,7 @@ function WorkPrograms({ workPrograms }: { workPrograms: WorkProgram[] }) {
 }
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/ui/avatar";
+import Information from "./component/information";
 
 function Reviews({
   reviews,
