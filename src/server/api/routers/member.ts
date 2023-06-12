@@ -12,7 +12,7 @@ export const memberRouter = createTRPCRouter({
         position: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const member = await ctx.prisma.member.create({
         data: {
           ...input,
@@ -31,7 +31,7 @@ export const memberRouter = createTRPCRouter({
         position: z.string().optional(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const member = await ctx.prisma.member.update({
         where: {
           id: input.id,
@@ -45,7 +45,7 @@ export const memberRouter = createTRPCRouter({
     }),
   deleteMember: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const member = await ctx.prisma.member.delete({
         where: {
           id: input.id,

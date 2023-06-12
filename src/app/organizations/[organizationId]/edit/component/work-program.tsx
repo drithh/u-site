@@ -2,21 +2,25 @@
 import { DataTable } from "~/ui/data-table";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Achievement } from "@prisma/client";
+import type { WorkProgram } from "@prisma/client";
 
 import { Button } from "~/ui/button";
 import dayjs from "dayjs";
 
 import { Edit, Trash } from "lucide-react";
 
-export const columns: ColumnDef<Achievement>[] = [
+export const columns: ColumnDef<WorkProgram>[] = [
   {
     accessorKey: "title",
-    header: "Peringkat dan Kegiatan",
+    header: "Judul Program Kerja",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
   },
   {
     accessorKey: "date",
-    header: "Waktu Kegiatan",
+    header: "Tanggal Pelaksanaan",
     cell: ({ row }) => {
       return dayjs(row.original.date).format("DD MMMM YYYY");
     },
@@ -29,29 +33,29 @@ export const columns: ColumnDef<Achievement>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex place-content-center gap-4">
-          <EditAchievement data={row.original} />
-          <DeleteAchievement id={row.original.id} />
+          <EditWorkProgram data={row.original} />
+          <DeleteWorkProgram id={row.original.id} />
         </div>
       );
     },
   },
 ];
 
-interface AchievementProps {
+interface WorkProgramProps {
   id: string;
-  data: Achievement[];
+  data: WorkProgram[];
 }
 
-export default function Achievement({ id, data }: AchievementProps) {
+export default function WorkProgram({ id, data }: WorkProgramProps) {
   return (
-    <div className="achievement border-2 border-solid border-stone-200 p-8">
+    <div className="workProgram border-2 border-solid border-stone-200 p-8">
       <h2 className="mb-12 text-center text-5xl font-bold uppercase">
-        Prestasi
+        Program Kerja
       </h2>
       <div className="my-6 font-sans ">
         <DataTable columns={columns} data={data} />
       </div>
-      <CreateAchievement id={id} />
+      <CreateWorkProgram id={id} />
     </div>
   );
 }
@@ -78,22 +82,24 @@ import {
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Textarea } from "~/ui/textarea";
 
 const formSchema = z.object({
   title: z.string().min(2, {
-    message: "Peringkat dan Kegiatan harus lebih dari 2 karakter",
+    message: "Judul program kerja harus lebih dari 2 karakter",
+  }),
+  status: z.string().min(2, {
+    message: "Status program kerja harus lebih dari 2 karakter",
   }),
   date: z.string().min(2, {
-    message: "Waktu Kegiatan harus lebih dari 2 karakter",
+    message: "Tanggal pelaksanaan program kerja harus lebih dari 2 karakter",
   }),
 });
 
-interface CreateAchievementProps {
+interface CreateWorkProgramProps {
   id: string;
 }
 
-export function CreateAchievement({ id }: CreateAchievementProps) {
+export function CreateWorkProgram({ id }: CreateWorkProgramProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -102,20 +108,23 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
     try {
-      const achievementDate = dayjs(values.date).toDate();
-      await api.achievement.createAchievement.mutate({
+      // remove date from values
+      const { date, ...rest } = values;
+      const workProgramDate = dayjs(date).toDate();
+
+      await api.workProgram.createWorkProgram.mutate({
         organizationId: id,
-        date: achievementDate,
-        title: values.title,
+        date: workProgramDate,
+        ...rest,
       });
       toast({
-        title: "Berhasil menambah prestasi",
+        title: "Berhasil menambah program kerja",
       });
       window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Gagal menambah prestasi",
+        title: "Gagal menambah program kerja",
       });
     }
   };
@@ -126,14 +135,14 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
           className="w-full bg-stone-500 text-justify text-lg  font-medium text-white hover:bg-stone-600"
           type="submit"
         >
-          Tambah Prestasi
+          Tambah Program Kerja
         </Button>
       </SheetTrigger>
       <SheetContent position="right" size="sm" className="font-sans">
         <SheetHeader>
-          <SheetTitle>Tambah Prestasi</SheetTitle>
+          <SheetTitle>Tambah Program Kerja</SheetTitle>
           <SheetDescription>
-            Buat prestasi yang pernah organisasi kamu ikuti
+            Buat program kerja yang pernah organisasi kamu ikuti
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
@@ -144,15 +153,28 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Peringkat dan Kegiatan</FormLabel>
+                    <FormLabel>Judul Program Kerja</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Peringkat dan Kegiatan"
-                        {...field}
-                      />
+                      <Input placeholder="Judul program kerja" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Ini nama peringkat dan kegiatan yang pernah kamu ikuti
+                      Ini judul program kerja organisasi kamu
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status Program Kerja</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Status program kerja" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ini status program kerja organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -163,16 +185,16 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Waktu Kegiatan</FormLabel>
+                    <FormLabel>Tanggal Pelaksanaan</FormLabel>
                     <FormControl>
                       <Input
                         type="date"
-                        placeholder="Waktu Kegiatan"
+                        placeholder="Tanggal pelaksanaan"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Ini waktu kegiatan yang pernah kamu ikuti
+                      Ini tanggal pelaksanaan program kerja organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -182,7 +204,7 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
                 className="bg-stone-500 text-justify text-lg font-medium text-white hover:bg-stone-600"
                 type="submit"
               >
-                Tambah Prestasi
+                Tambah Program Kerja
               </Button>
             </form>
           </Form>
@@ -193,14 +215,15 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
   );
 }
 
-interface EditAchievementProps {
-  data: Achievement;
+interface EditWorkProgramProps {
+  data: WorkProgram;
 }
-export function EditAchievement({ data }: EditAchievementProps) {
+export function EditWorkProgram({ data }: EditWorkProgramProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: data.title,
+      status: data.status,
       date: dayjs(data.date).format("YYYY-MM-DD"),
     },
   });
@@ -209,20 +232,23 @@ export function EditAchievement({ data }: EditAchievementProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
     try {
-      const achievementDate = dayjs(values.date).toDate();
-      await api.achievement.updateAchievement.mutate({
+      // remove date from values
+      const { date, ...rest } = values;
+      const workProgramDate = dayjs(date).toDate();
+
+      await api.workProgram.updateWorkProgram.mutate({
         id: data.id,
-        date: achievementDate,
-        title: values.title,
+        date: workProgramDate,
+        ...rest,
       });
       toast({
-        title: "Berhasil mengubah prestasi",
+        title: "Berhasil mengubah program kerja",
       });
       window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Gagal mengubah prestasi",
+        title: "Gagal mengubah program kerja",
       });
     }
   };
@@ -235,9 +261,9 @@ export function EditAchievement({ data }: EditAchievementProps) {
       </SheetTrigger>
       <SheetContent position="right" size="sm" className="font-sans">
         <SheetHeader>
-          <SheetTitle>Edit Prestasi</SheetTitle>
+          <SheetTitle>Edit Program Kerja</SheetTitle>
           <SheetDescription>
-            Buat perubahan pada prestasi yang pernah organisasi kamu ikuti
+            Buat perubahan pada program kerja yang pernah organisasi kamu ikuti
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
@@ -248,15 +274,28 @@ export function EditAchievement({ data }: EditAchievementProps) {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Peringkat dan Kegiatan</FormLabel>
+                    <FormLabel>Judul Program Kerja</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Peringkat dan Kegiatan"
-                        {...field}
-                      />
+                      <Input placeholder="Judul program kerja" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Ini nama peringkat dan kegiatan yang pernah kamu ikuti
+                      Ini judul program kerja organisasi kamu
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status Program Kerja</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Status program kerja" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ini status program kerja organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -267,16 +306,16 @@ export function EditAchievement({ data }: EditAchievementProps) {
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Waktu Kegiatan</FormLabel>
+                    <FormLabel>Tanggal Pelaksanaan</FormLabel>
                     <FormControl>
                       <Input
                         type="date"
-                        placeholder="Waktu Kegiatan"
+                        placeholder="Tanggal pelaksanaan"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Ini waktu kegiatan yang pernah kamu ikuti
+                      Ini tanggal pelaksanaan program kerja organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -311,25 +350,25 @@ import {
 import { api } from "~/trpc/client";
 import { useToast } from "~/ui/use-toast";
 
-interface DeleteAchievementProps {
+interface DeleteWorkProgramProps {
   id: string;
 }
 
-export function DeleteAchievement({ id }: DeleteAchievementProps) {
+export function DeleteWorkProgram({ id }: DeleteWorkProgramProps) {
   const { toast } = useToast();
-  const deleteAchievement = async () => {
+  const deleteWorkProgram = async () => {
     try {
-      await api.achievement.deleteAchievement.mutate({
+      await api.workProgram.deleteWorkProgram.mutate({
         id,
       });
       toast({
-        title: "Berhasil menghapus prestasi",
+        title: "Berhasil menghapus program kerja",
       });
       window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Gagal menghapus prestasi",
+        title: "Gagal menghapus program kerja",
       });
     }
   };
@@ -344,7 +383,7 @@ export function DeleteAchievement({ id }: DeleteAchievementProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Apa kamu yakin?</AlertDialogTitle>
           <AlertDialogDescription>
-            Aksi ini tidak dapat diurungkan. Ini akan menghapus prestasi
+            Aksi ini tidak dapat diurungkan. Ini akan menghapus program kerja
             organisasi kamu dari server kami.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -352,7 +391,7 @@ export function DeleteAchievement({ id }: DeleteAchievementProps) {
           <AlertDialogCancel>Batal</AlertDialogCancel>
           <AlertDialogAction
             className="bg-stone-500 text-justify   text-white hover:bg-stone-600"
-            onClick={deleteAchievement}
+            onClick={deleteWorkProgram}
           >
             Yakin
           </AlertDialogAction>

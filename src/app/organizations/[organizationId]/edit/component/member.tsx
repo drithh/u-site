@@ -2,24 +2,28 @@
 import { DataTable } from "~/ui/data-table";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Achievement } from "@prisma/client";
+import type { Member } from "@prisma/client";
 
 import { Button } from "~/ui/button";
-import dayjs from "dayjs";
 
 import { Edit, Trash } from "lucide-react";
 
-export const columns: ColumnDef<Achievement>[] = [
+export const columns: ColumnDef<Member>[] = [
   {
-    accessorKey: "title",
-    header: "Peringkat dan Kegiatan",
+    accessorKey: "name",
+    header: "Nama",
   },
   {
-    accessorKey: "date",
-    header: "Waktu Kegiatan",
-    cell: ({ row }) => {
-      return dayjs(row.original.date).format("DD MMMM YYYY");
-    },
+    accessorKey: "position",
+    header: "Jabatan",
+  },
+  {
+    accessorKey: "studentId",
+    header: "NIM",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
   },
   {
     id: "actions",
@@ -29,29 +33,29 @@ export const columns: ColumnDef<Achievement>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex place-content-center gap-4">
-          <EditAchievement data={row.original} />
-          <DeleteAchievement id={row.original.id} />
+          <EditMember data={row.original} />
+          <DeleteMember id={row.original.id} />
         </div>
       );
     },
   },
 ];
 
-interface AchievementProps {
+interface MemberProps {
   id: string;
-  data: Achievement[];
+  data: Member[];
 }
 
-export default function Achievement({ id, data }: AchievementProps) {
+export default function Member({ id, data }: MemberProps) {
   return (
-    <div className="achievement border-2 border-solid border-stone-200 p-8">
+    <div className="member border-2 border-solid border-stone-200 p-8">
       <h2 className="mb-12 text-center text-5xl font-bold uppercase">
-        Prestasi
+        Anggota
       </h2>
       <div className="my-6 font-sans ">
         <DataTable columns={columns} data={data} />
       </div>
-      <CreateAchievement id={id} />
+      <CreateMember id={id} />
     </div>
   );
 }
@@ -78,22 +82,27 @@ import {
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Textarea } from "~/ui/textarea";
 
 const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "Peringkat dan Kegiatan harus lebih dari 2 karakter",
+  name: z.string().min(2, {
+    message: "Nama anggota harus lebih dari 2 karakter",
   }),
-  date: z.string().min(2, {
-    message: "Waktu Kegiatan harus lebih dari 2 karakter",
+  position: z.string().min(2, {
+    message: "Jabatan harus lebih dari 2 karakter",
+  }),
+  studentId: z.string().min(2, {
+    message: "NIM harus lebih dari 2 karakter",
+  }),
+  email: z.string().email({
+    message: "Email tidak valid",
   }),
 });
 
-interface CreateAchievementProps {
+interface CreateMemberProps {
   id: string;
 }
 
-export function CreateAchievement({ id }: CreateAchievementProps) {
+export function CreateMember({ id }: CreateMemberProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -102,20 +111,18 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
     try {
-      const achievementDate = dayjs(values.date).toDate();
-      await api.achievement.createAchievement.mutate({
+      await api.member.createMember.mutate({
         organizationId: id,
-        date: achievementDate,
-        title: values.title,
+        ...values,
       });
       toast({
-        title: "Berhasil menambah prestasi",
+        title: "Berhasil menambah anggota",
       });
       window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Gagal menambah prestasi",
+        title: "Gagal menambah anggota",
       });
     }
   };
@@ -126,14 +133,14 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
           className="w-full bg-stone-500 text-justify text-lg  font-medium text-white hover:bg-stone-600"
           type="submit"
         >
-          Tambah Prestasi
+          Tambah Anggota
         </Button>
       </SheetTrigger>
       <SheetContent position="right" size="sm" className="font-sans">
         <SheetHeader>
-          <SheetTitle>Tambah Prestasi</SheetTitle>
+          <SheetTitle>Tambah Anggota</SheetTitle>
           <SheetDescription>
-            Buat prestasi yang pernah organisasi kamu ikuti
+            Buat anggota yang pernah organisasi kamu ikuti
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
@@ -141,18 +148,15 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="title"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Peringkat dan Kegiatan</FormLabel>
+                    <FormLabel>Nama Anggota</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Peringkat dan Kegiatan"
-                        {...field}
-                      />
+                      <Input placeholder="Nama anggota" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Ini nama peringkat dan kegiatan yang pernah kamu ikuti
+                      Ini nama anggota organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -160,19 +164,47 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
               />
               <FormField
                 control={form.control}
-                name="date"
+                name="position"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Waktu Kegiatan</FormLabel>
+                    <FormLabel>Jabatan</FormLabel>
                     <FormControl>
-                      <Input
-                        type="date"
-                        placeholder="Waktu Kegiatan"
-                        {...field}
-                      />
+                      <Input placeholder="Ketua" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Ini waktu kegiatan yang pernah kamu ikuti
+                      Ini jabatan anggota organisasi kamu
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="studentId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NIM</FormLabel>
+                    <FormControl>
+                      <Input placeholder="NIM" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ini NIM anggota organisasi kamu
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ini email anggota organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -182,7 +214,7 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
                 className="bg-stone-500 text-justify text-lg font-medium text-white hover:bg-stone-600"
                 type="submit"
               >
-                Tambah Prestasi
+                Tambah Anggota
               </Button>
             </form>
           </Form>
@@ -193,15 +225,17 @@ export function CreateAchievement({ id }: CreateAchievementProps) {
   );
 }
 
-interface EditAchievementProps {
-  data: Achievement;
+interface EditMemberProps {
+  data: Member;
 }
-export function EditAchievement({ data }: EditAchievementProps) {
+export function EditMember({ data }: EditMemberProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: data.title,
-      date: dayjs(data.date).format("YYYY-MM-DD"),
+      name: data.name,
+      position: data.position,
+      studentId: data.studentId,
+      email: data.email,
     },
   });
   const { toast } = useToast();
@@ -209,20 +243,18 @@ export function EditAchievement({ data }: EditAchievementProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
     try {
-      const achievementDate = dayjs(values.date).toDate();
-      await api.achievement.updateAchievement.mutate({
+      await api.member.updateMember.mutate({
         id: data.id,
-        date: achievementDate,
-        title: values.title,
+        ...values,
       });
       toast({
-        title: "Berhasil mengubah prestasi",
+        title: "Berhasil mengubah anggota",
       });
       window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Gagal mengubah prestasi",
+        title: "Gagal mengubah anggota",
       });
     }
   };
@@ -235,9 +267,9 @@ export function EditAchievement({ data }: EditAchievementProps) {
       </SheetTrigger>
       <SheetContent position="right" size="sm" className="font-sans">
         <SheetHeader>
-          <SheetTitle>Edit Prestasi</SheetTitle>
+          <SheetTitle>Edit Anggota</SheetTitle>
           <SheetDescription>
-            Buat perubahan pada prestasi yang pernah organisasi kamu ikuti
+            Buat perubahan pada anggota yang pernah organisasi kamu ikuti
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
@@ -245,18 +277,15 @@ export function EditAchievement({ data }: EditAchievementProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="title"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Peringkat dan Kegiatan</FormLabel>
+                    <FormLabel>Nama Anggota</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Peringkat dan Kegiatan"
-                        {...field}
-                      />
+                      <Input placeholder="Nama anggota" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Ini nama peringkat dan kegiatan yang pernah kamu ikuti
+                      Ini nama anggota organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -264,19 +293,47 @@ export function EditAchievement({ data }: EditAchievementProps) {
               />
               <FormField
                 control={form.control}
-                name="date"
+                name="position"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Waktu Kegiatan</FormLabel>
+                    <FormLabel>Jabatan</FormLabel>
                     <FormControl>
-                      <Input
-                        type="date"
-                        placeholder="Waktu Kegiatan"
-                        {...field}
-                      />
+                      <Input placeholder="Ketua" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Ini waktu kegiatan yang pernah kamu ikuti
+                      Ini jabatan anggota organisasi kamu
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="studentId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NIM</FormLabel>
+                    <FormControl>
+                      <Input placeholder="NIM" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ini NIM anggota organisasi kamu
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ini email anggota organisasi kamu
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -311,25 +368,25 @@ import {
 import { api } from "~/trpc/client";
 import { useToast } from "~/ui/use-toast";
 
-interface DeleteAchievementProps {
+interface DeleteMemberProps {
   id: string;
 }
 
-export function DeleteAchievement({ id }: DeleteAchievementProps) {
+export function DeleteMember({ id }: DeleteMemberProps) {
   const { toast } = useToast();
-  const deleteAchievement = async () => {
+  const deleteMember = async () => {
     try {
-      await api.achievement.deleteAchievement.mutate({
+      await api.member.deleteMember.mutate({
         id,
       });
       toast({
-        title: "Berhasil menghapus prestasi",
+        title: "Berhasil menghapus anggota",
       });
       window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Gagal menghapus prestasi",
+        title: "Gagal menghapus anggota",
       });
     }
   };
@@ -344,7 +401,7 @@ export function DeleteAchievement({ id }: DeleteAchievementProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Apa kamu yakin?</AlertDialogTitle>
           <AlertDialogDescription>
-            Aksi ini tidak dapat diurungkan. Ini akan menghapus prestasi
+            Aksi ini tidak dapat diurungkan. Ini akan menghapus anggota
             organisasi kamu dari server kami.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -352,7 +409,7 @@ export function DeleteAchievement({ id }: DeleteAchievementProps) {
           <AlertDialogCancel>Batal</AlertDialogCancel>
           <AlertDialogAction
             className="bg-stone-500 text-justify   text-white hover:bg-stone-600"
-            onClick={deleteAchievement}
+            onClick={deleteMember}
           >
             Yakin
           </AlertDialogAction>

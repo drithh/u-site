@@ -7,11 +7,11 @@ export const workProgramRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         title: z.string(),
-        date: z.string(),
+        date: z.date(),
         status: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const workProgram = await ctx.prisma.workProgram.create({
         data: {
           ...input,
@@ -25,11 +25,11 @@ export const workProgramRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         title: z.string(),
-        date: z.string(),
+        date: z.date(),
         status: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const workProgram = await ctx.prisma.workProgram.update({
         where: {
           id: input.id,
@@ -43,7 +43,7 @@ export const workProgramRouter = createTRPCRouter({
     }),
   deleteWorkProgram: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const workProgram = await ctx.prisma.workProgram.delete({
         where: {
           id: input.id,
