@@ -30,6 +30,7 @@ import {
 } from "~/ui/form";
 import { useForm } from "react-hook-form";
 import { api } from "~/trpc/client";
+import { useToast } from "~/ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -71,16 +72,15 @@ export default function ProfileForm({
       description: organization?.description ?? "",
       field: organization?.field ?? "",
       establishedAt:
-        dayjs(
-          // yyyy-mm-dd
-          organization?.establishedAt ?? "2021-01-01",
+        dayjs(organization?.establishedAt ?? "2021-01-01", "YYYY-MM-DD").format(
           "YYYY-MM-DD"
-        ).format("YYYY-MM-DD") ?? undefined,
+        ) ?? undefined,
 
       vision: organization?.vision ?? undefined,
       mission: organization?.mission ?? undefined,
     },
   });
+  const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const image = values.image?.image as File | undefined;
@@ -88,16 +88,26 @@ export default function ProfileForm({
       ? new Date(values.establishedAt)
       : undefined;
 
-    await api.organization.updateOrganization.mutate({
-      id,
-      name: values.name,
-      description: values.description,
-      field: values.field,
-      image,
-      establishedAt,
-      vision: values.vision,
-      mission: values.mission,
-    });
+    try {
+      await api.organization.updateOrganization.mutate({
+        id,
+        name: values.name,
+        description: values.description,
+        field: values.field,
+        image,
+        establishedAt,
+        vision: values.vision,
+        mission: values.mission,
+      });
+      toast({
+        title: "Berhasil mengubah informasi organisasi.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Gagal mengubah informasi organisasi.",
+      });
+    }
   }
 
   return (

@@ -7,10 +7,10 @@ export const achievementRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         title: z.string(),
-        date: z.string(),
+        date: z.date(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const achievement = await ctx.prisma.achievement.create({
         data: {
           ...input,
@@ -24,10 +24,10 @@ export const achievementRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         title: z.string(),
-        date: z.string(),
+        date: z.date(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const achievement = await ctx.prisma.achievement.update({
         where: {
           id: input.id,
@@ -41,7 +41,7 @@ export const achievementRouter = createTRPCRouter({
     }),
   deleteAchievement: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const achievement = await ctx.prisma.achievement.delete({
         where: {
           id: input.id,

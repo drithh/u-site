@@ -1,11 +1,6 @@
 import { api } from "~/trpc/server";
-import type {
-  Member,
-  WorkProgram,
-  Achievement,
-  Review,
-  User,
-} from "@prisma/client";
+import type { Member, WorkProgram, Review, User } from "@prisma/client";
+import Achievement from "./component/achievement";
 import { Star } from "lucide-react";
 import {
   Table,
@@ -38,41 +33,15 @@ export default async function Page({
           organization={organization.detail}
           id={params.organizationId}
         />
-        <Achievements achievements={organization.achievements} />
+        <Achievement
+          data={organization.achievements}
+          id={params.organizationId}
+        />
         <Members members={organization.members} />
         <WorkPrograms workPrograms={organization.workPrograms} />
         <Reviews reviews={organization.reviews} />
       </main>
     </>
-  );
-}
-
-function Achievements({ achievements }: { achievements: Achievement[] }) {
-  return (
-    <div className="achievement border-2 border-solid border-stone-200 p-8">
-      <h2 className="mb-12 text-center text-5xl font-bold uppercase">
-        Prestasi
-      </h2>
-      <div className="my-6 grid grid-cols-1 gap-8 font-sans md:grid-cols-2 lg:grid-cols-3">
-        {achievements.map((achievement) => (
-          <div
-            key={achievement.id}
-            className="flex flex-col items-center justify-center gap-2 border-y-2 border-solid border-stone-200  px-4 py-6"
-          >
-            <h3 className="text-center text-xl font-bold">
-              {achievement.title}
-            </h3>
-            <p className="opacity-60">
-              {achievement.date.toLocaleString(undefined, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
 
