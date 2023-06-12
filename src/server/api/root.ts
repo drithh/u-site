@@ -4,6 +4,7 @@ import { memberRouter } from "~/server/api/routers/member";
 import { achievementRouter } from "~/server/api/routers/achievement";
 import { reviewRouter } from "~/server/api/routers/review";
 import { workProgramRouter } from "~/server/api/routers/work-program";
+import { userRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -11,6 +12,7 @@ import { workProgramRouter } from "~/server/api/routers/work-program";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  user: userRouter,
   organization: organizationRouter,
   member: memberRouter,
   achievement: achievementRouter,

@@ -15,15 +15,111 @@ import {
   SelectValue,
 } from "~/ui/select";
 import { signIn } from "next-auth/react";
+import { useRef, useState } from "react";
+import { api } from "~/trpc/client";
+import { useToast } from "~/ui/use-toast";
 
 interface SignUpFormProps {
   linkToSignIn?: boolean;
 }
 
 export default function SignUpForm({ linkToSignIn }: SignUpFormProps) {
+  const { toast } = useToast();
+
+  const [tabValue, setTabValue] = useState("account");
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const organizationNameRef = useRef<HTMLInputElement>(null);
+  const organizationDescriptionRef = useRef<HTMLTextAreaElement>(null);
+  const organizationFieldRef = useRef<string | null>(null);
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const name = nameRef.current?.value;
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
+    const organizationName = organizationNameRef.current?.value;
+    const organizationDescription = organizationDescriptionRef.current?.value;
+    const organizationField = organizationFieldRef.current;
+
+    if (!email || !password || !name) {
+      toast({
+        variant: "destructive",
+        title: "Toloong isi semua form",
+      });
+      return;
+    }
+
+    const user = {
+      name,
+      email,
+      password,
+    };
+
+    if (tabValue === "account") {
+      try {
+        await api.user.createUser.mutate({
+          user,
+        });
+        toast({
+          title: "Berhasil membuat akun",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Gagal membuat akun",
+        });
+      }
+      return;
+    } else {
+      if (!organizationName || !organizationDescription || !organizationField) {
+        toast({
+          variant: "destructive",
+          title: "Toloong isi semua form",
+        });
+        return;
+      }
+
+      const organization = {
+        name: organizationName,
+        description: organizationDescription,
+        field: organizationField,
+      };
+
+      try {
+        await api.user.createUser.mutate({
+          user,
+          organization,
+        });
+        toast({
+          title: "Berhasil membuat akun",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Gagal membuat akun",
+        });
+      }
+    }
+
+    await signIn("credentials", {
+      email,
+      password,
+      callbackUrl: "/",
+    });
+  };
+
   return (
     <>
-      <Tabs defaultValue="account" className="font-sans">
+      <Tabs
+        defaultValue="account"
+        className="font-sans"
+        onValueChange={(e) => {
+          setTabValue(e);
+        }}
+      >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="account">User</TabsTrigger>
           <TabsTrigger value="ukm">UKM</TabsTrigger>
@@ -31,19 +127,36 @@ export default function SignUpForm({ linkToSignIn }: SignUpFormProps) {
         <TabsContent value="account">
           <div className="flex flex-col gap-4 ">
             <div className="grid w-full  items-center gap-1.5">
+              <Label htmlFor="name" className="text-lg text-stone-600">
+                Name
+              </Label>
+              <Input ref={nameRef} type="name" id="name" placeholder="Name" />
+            </div>
+            <div className="grid w-full  items-center gap-1.5">
               <Label htmlFor="email" className="text-lg text-stone-600">
                 Email
               </Label>
-              <Input type="email" id="email" placeholder="Email" />
+              <Input
+                ref={emailRef}
+                type="email"
+                id="email"
+                placeholder="Email"
+              />
             </div>
             <div className="grid w-full  items-center gap-1.5">
               <Label htmlFor="password" className="text-lg text-stone-600">
                 Password
               </Label>
-              <Input type="password" id="password" placeholder="Password" />
+              <Input
+                ref={passwordRef}
+                type="password"
+                id="password"
+                placeholder="Password"
+              />
             </div>
             <Button
               type="submit"
+              onClick={handleSubmit}
               className="mt-6 w-full bg-stone-400 text-lg font-semibold text-white"
             >
               Sign Up
@@ -70,30 +183,55 @@ export default function SignUpForm({ linkToSignIn }: SignUpFormProps) {
         </TabsContent>
         <TabsContent value="ukm" className="">
           <ScrollArea className="flex max-h-[70vh]  flex-col gap-6">
+            <div className="grid w-full  items-center gap-1.5">
+              <Label htmlFor="name" className="text-lg text-stone-600">
+                Name
+              </Label>
+              <Input ref={nameRef} type="name" id="name" placeholder="Name" />
+            </div>
             <div className="mt-6 w-full  items-center gap-1.5">
               <Label htmlFor="email" className="text-lg text-stone-600">
                 Email
               </Label>
-              <Input type="email" id="email" placeholder="Email" />
+              <Input
+                ref={emailRef}
+                type="email"
+                id="email"
+                placeholder="Email"
+              />
             </div>
             <div className="mt-6 w-full  items-center gap-1.5">
               <Label htmlFor="password" className="text-lg text-stone-600">
                 Password
               </Label>
-              <Input type="password" id="password" placeholder="Password" />
+              <Input
+                ref={passwordRef}
+                type="password"
+                id="password"
+                placeholder="Password"
+              />
             </div>
             <div className="mt-6 w-full  items-center gap-1.5">
               <Label htmlFor="ukm-name" className="text-lg text-stone-600">
                 UKM Name
               </Label>
-              <Input type="text" id="ukm-name" placeholder="Nama UKM" />
+              <Input
+                ref={organizationNameRef}
+                type="text"
+                id="ukm-name"
+                placeholder="Nama UKM"
+              />
             </div>
             <div className="mt-6 w-full  items-center gap-1.5">
               <Label htmlFor="ukm-field" className="text-lg text-stone-600">
                 UKM Field
               </Label>
               <div className=" w-full">
-                <Select>
+                <Select
+                  onValueChange={(value) => {
+                    organizationFieldRef.current = value;
+                  }}
+                >
                   <SelectTrigger className="w-full rounded-md border-stone-300 font-sans">
                     <SelectValue placeholder="Bidang" />
                   </SelectTrigger>
@@ -130,10 +268,15 @@ export default function SignUpForm({ linkToSignIn }: SignUpFormProps) {
               >
                 UKM Description
               </Label>
-              <Textarea id="ukm-description" placeholder="Deskripsi UKM" />
+              <Textarea
+                ref={organizationDescriptionRef}
+                id="ukm-description"
+                placeholder="Deskripsi UKM"
+              />
             </div>
             <Button
               type="submit"
+              onClick={handleSubmit}
               className="mt-6 w-full bg-stone-400 text-lg font-semibold text-white"
             >
               Sign Up
