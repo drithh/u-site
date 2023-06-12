@@ -57,7 +57,10 @@ export default async function Page({
         <Achievements achievements={organization.achievements} />
         <Members members={organization.members} />
         <WorkPrograms workPrograms={organization.workPrograms} />
-        <Reviews reviews={organization.reviews} />
+        <Reviews
+          reviews={organization.reviews}
+          id={organization.detail?.id ?? ""}
+        />
       </main>
     </>
   );

@@ -57,7 +57,11 @@ export default function SignUpForm({ linkToSignIn }: SignUpFormProps) {
               </div>
               <Button
                 className="w-full bg-stone-400 text-lg font-semibold text-white"
-                onClick={() => void signIn("google")}
+                onClick={() => {
+                  void signIn("google", {
+                    callbackUrl: "/",
+                  });
+                }}
               >
                 Sign Up with Google
               </Button>

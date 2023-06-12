@@ -21,12 +21,12 @@ const lato = Lato({
 });
 
 export const metadata = {
-  title: "U-Site",
+  title: "U-SITE",
   description: "Carilah UKM yang sesuai dengan minat dan bakatmu",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default  function RootLayout({
+export default function RootLayout({
   children,
   signInModal,
   signUpModal,
@@ -36,7 +36,7 @@ export default  function RootLayout({
   signUpModal: React.ReactNode;
 }) {
   return (
-    <Providers >
+    <Providers>
       <html lang="en">
         <body
           className={twMerge(

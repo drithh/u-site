@@ -4,8 +4,10 @@ import Achievement from "./component/achievement";
 import Member from "./component/member";
 import WorkProgram from "./component/work-program";
 // init dayjs
+import { redirect } from "next/navigation";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { getServerAuthSession } from "~/server/auth";
 dayjs.extend(relativeTime);
 
 export default async function Page({
@@ -13,6 +15,12 @@ export default async function Page({
 }: {
   params: { organizationId: string };
 }) {
+  const session = await getServerAuthSession();
+
+  if (!session || session.user.organizationId !== params.organizationId) {
+    redirect("/");
+  }
+
   const organization = await api.organization.getOrganizationById.query({
     id: params.organizationId,
   });

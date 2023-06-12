@@ -15,10 +15,12 @@ dayjs.extend(relativeTime);
 
 export default function Reviews({
   reviews,
+  id,
 }: {
   reviews: (Review & {
     createdBy: User;
   })[];
+  id: string;
 }) {
   const session = useSession();
   return (
@@ -71,7 +73,7 @@ export default function Reviews({
       </div>
       {session.status === "authenticated" && (
         <div className="flex flex-col gap-4 font-sans">
-          <ReviewModal />
+          <ReviewModal id={id} />
         </div>
       )}
     </div>
@@ -93,12 +95,15 @@ import { api } from "~/trpc/client";
 import { useRef } from "react";
 import { toast } from "~/ui/use-toast";
 
-function ReviewModal() {
+interface ReviewModalProps {
+  id: string;
+}
+
+function ReviewModal({ id }: ReviewModalProps) {
   const ratingRef = useRef<HTMLInputElement>(null);
   const reviewRef = useRef<HTMLTextAreaElement>(null);
 
   const session = useSession();
-  const organizationId = session.data?.user.organizationId ?? "";
   const createdById = session.data?.user.id ?? "";
 
   const createReview = async ({
@@ -112,13 +117,13 @@ function ReviewModal() {
       await api.review.createReview.mutate({
         rating,
         comment,
-        organizationId,
+        organizationId: id,
         createdById,
       });
-      window.location.reload();
       toast({
         title: "Berhasil menambah review",
       });
+      window.location.reload();
     } catch (error) {
       toast({
         variant: "destructive",
